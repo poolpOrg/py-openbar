@@ -298,7 +298,6 @@ class _LogMiddleware(object):
 def run_bottle(action, host, port, packages, **kwargs):
     def _start():
         for package in packages:
-            print(package)
             importlib.import_module(package)
 
         openbar.log.info("Started")
