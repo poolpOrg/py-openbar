@@ -75,7 +75,7 @@ def exception(*args):
     if args:
         ctx = args[0] % tuple(args[1:])
         trace = ctx + "\n---\n" + trace
-    _LOGGER.error("EXCEPTION #%r", trace)
+    _LOGGER.error("Exception: %r", trace)
 
 
 def setup(procname, debugging=False):

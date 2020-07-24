@@ -292,6 +292,9 @@ class _LogMiddleware(object):
                           bottle.request.path)
         return ret
 
+    def write(self, err):
+        openbar.log.exception(err)
+
 def run_bottle(action, host, port, packages, **kwargs):
     def _start():
         for package in packages:
