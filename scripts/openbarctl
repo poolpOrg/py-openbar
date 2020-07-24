@@ -1,0 +1,93 @@
+#! /usr/bin/env python
+#
+# Copyright (c) 2013,2017 Gilles Chehade <gilles@poolp.org>
+# Copyright (c) 2013 Eric Faurot <eric@faurot.net>
+#
+# Permission to use, copy, modify, and distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#
+"""
+control script for openbar components
+"""
+
+import getopt
+import importlib
+import os
+import sys
+
+import openbar.config
+import openbar.run
+
+COMMANDS = {
+    "backend" : ('openbar.run_backend.run', 'start|stop|restart|status'),
+    "frontend" : ('openbar.run_frontend.run', 'start|stop|restart|status'),
+}
+
+def usage():
+    """
+    display usage for openbarctl
+    """
+    print("usage: %s [-dv] [-f conf] command ..." % (sys.argv[0].split('/')[-1], ))
+    for key in sorted(COMMANDS):
+        print("\t%s %s" % (key, COMMANDS[key][1]))
+
+def errx(msg):
+    """
+    display error message and exit
+    """
+    sys.stderr.write("%s: %s\n" % (sys.argv[0].split('/')[-1], msg))
+    sys.exit(1)
+
+if __name__ == '__main__':
+    try:
+        OPTS, ARGS = getopt.getopt(sys.argv[1:], "df:v")
+    except getopt.GetoptError:
+        usage()
+        sys.exit(1)
+
+    if os.geteuid() != 0:
+        errx("you must be root to drop privileges ;-)")
+
+    configfile = "/etc/openbar.conf"
+    verbose = False
+    daemonize = True
+
+    for o, a in OPTS:
+        if o == '-d':
+            daemonize = False
+        elif o == '-f':
+            configfile = a
+        elif o == '-v':
+            verbose = True
+
+    openbar.run.VERBOSE = verbose
+    openbar.run.DAEMONIZE = daemonize
+
+    try:
+        openbar.config.parse(configfile)
+    except openbar.exceptions.InvalidConfiguration as exc:
+        errx(exc)
+
+    if not ARGS:
+        usage()
+        sys.exit(1)
+
+    command, section = ARGS[0], ARGS[1]
+    config = openbar.config.get(section)
+    try:
+        if config['type'] == "backend":
+            openbar.run.run_backend(section, action=command)
+        elif config['type'] == "frontend":
+            openbar.run.run_frontend(section, action=command)
+    except openbar.exceptions.InvalidConfiguration as exc:
+        errx(exc)
+    sys.exit(0)
