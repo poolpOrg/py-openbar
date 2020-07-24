@@ -10,7 +10,6 @@ Requirements
 ------------
 openbar assumes Python 3.4 or higher.
 
-
 Initial setup
 -------------
 openbar requires being started as root but will then drop to an unprivileged user.
@@ -40,28 +39,26 @@ Configuration
 Sample configuration files are available in the etc/ subdirectory of the package.
 They must be moved to /etc, by default openbar will search for an /etc/openbar.conf unless overriden.
 
-
 Running and stopping
 --------------------
-openbar has two components, the frontend and the backend.
+openbar currently supports two types of components,
+`frontend` and `backend`,
+referenced as distinct named units in the configuration file.
 They are controlled through the `openbarctl` utility installed in the virtualenv.
 
 To start openbar:
 ```
-# /venv/bin/openbarctl frontend start
-# /venv/bin/openbarctl backend start
+# /venv/bin/openbarctl start foobarbaz
 ```
 
 To stop openbar:
 ```
-# /venv/bin/openbarctl frontend stop
-# /venv/bin/openbarctl backend stop
+# /venv/bin/openbarctl stop foobarbaz
 ```
 
 During development, the components may be started in foreground:
 ```
-# /venv/bin/openbarctl -d frontend start
-# /venv/bin/openbarctl -d backend start
+# /venv/bin/openbarctl -d start foobarbaz
 ```
 
 When running in foreground, logs are written to stdout, otherwise they are sent to the syslog daemon.
