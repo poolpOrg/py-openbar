@@ -42,6 +42,8 @@ def parse(filename):
             parse_frontend(filename, section, config[section])
         elif type_ == "backend":
             parse_backend(filename, section, config[section])
+        elif type_ == "database":
+            parse_database(filename, section, config[section])
         else:
             print(type_)
             raise openbar.exceptions.InvalidConfiguration("unknown section type %s for section %s in configuration file: %s" % (type_, section, filename))
@@ -79,7 +81,7 @@ def parse_backend(filename, section, config):
 
 def parse_database(filename, section, config):
     tmp = {}
-    for key in ['engine', 'host', 'port', 'username', 'password']:
+    for key in ['type', 'engine', 'host', 'port', 'database', 'username', 'password']:
         if config.get(key) is None:
             raise openbar.exceptions.InvalidConfiguration("%s: in section 'database': missing key '%s'" % (filename, key))
         tmp[key] = config.get(key)

@@ -40,6 +40,7 @@ CONFIGURATION = {
         'requests==2.20.0',
         'six==1.10.0',
 	'jinja2==2.11.2',
+    'psycopg2-binary',
     ],
     'packages':         ['openbar'],
     'package_data':     {'openbar' : [

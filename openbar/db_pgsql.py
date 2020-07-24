@@ -53,10 +53,10 @@ class _Connection(object):
 _POOLS_LOCK = threading.Lock()
 _POOLS_DICT = {}
 
-def get_connection_pool(host, port, username, password, dbname, read_only):
+def get_connection_pool(host, port, username, password, dbname):
 
     with _POOLS_LOCK:
-        pool = _POOLS_DICT.get((host, port, username, dbname, read_only), None)
+        pool = _POOLS_DICT.get((host, port, username, dbname), None)
         if pool is not None:
             return pool
         pool = psycopg2.pool.ThreadedConnectionPool(minconn=1,
@@ -66,7 +66,7 @@ def get_connection_pool(host, port, username, password, dbname, read_only):
                                                     user=username,
                                                     password=password,
                                                     dbname=dbname)
-        _POOLS_DICT[(host, port, username, dbname, read_only)] = pool
+        _POOLS_DICT[(host, port, username, dbname)] = pool
         return pool
 
 

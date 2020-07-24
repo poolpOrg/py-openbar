@@ -27,5 +27,18 @@ class Connector(openbar.db_pgsql.Connector):
 class Connected(openbar.db_pgsql.Connected):
     pass
 
-def get_connection_pool(host, port, username, password, dbname, read_only):
-    return openbar.db_pgsql.get_connection_pool(host, port, username, password, dbname, read_only)
+def get_connection_pool(host, port, username, password, dbname):
+    return openbar.db_pgsql.get_connection_pool(host, port, username, password, dbname)
+
+def connector(name, factory):
+    config = openbar.config.get(name)
+
+    host = config.get('host')
+    username = config.get('username')
+    password = config.get('password')
+    database = config.get('database')
+    port = config.get('port')
+
+    return openbar.db.Connector("%s" % database,
+        get_connection_pool(host, port, username, password, database),
+        factory)
