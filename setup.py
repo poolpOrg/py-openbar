@@ -39,7 +39,7 @@ CONFIGURATION = {
         'pyparsing==2.2.0',
         'requests==2.20.0',
         'six==1.10.0',
-	'jinja2==2.11.2',
+	'jinja2==2.11.3',
     'psycopg2-binary',
     ],
     'packages':         ['openbar'],
