@@ -31,7 +31,7 @@ CONFIGURATION = {
     'version':          '0.1',
     'install_requires': [
         'appdirs==1.4.3',
-        'bottle==0.12.13',
+        'bottle==0.12.19',
 	    'bottle-beaker==0.1.3',
 	    'CherryPy==3.3.0',
         'nose==1.3.7',
